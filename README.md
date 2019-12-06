@@ -1,5 +1,9 @@
 # mesh-displayer
 
+##本地展示
+- 将展示样例图片文件夹shigondiansucai放置在src/assets/
+- 即该文件夹路径为src/assets/shigongdiansucai
+
 ## Project setup
 ```
 npm install

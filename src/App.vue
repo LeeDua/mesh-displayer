@@ -1,32 +1,60 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div>
+        <top-bar id="topBar"></top-bar>
+        <div id="mid-content" class="row d-flex justify-content-center">
+            <right-bar id="rbar"></right-bar>
+            <carousel></carousel>
+        </div>
     </div>
-    <router-view/>
-  </div>
+
+
+<!--            <div alt="Max-width 100%">-->
+<!--                <div class="w-auto d-inline-block" style="background-color: #eee;">-->
+<!--                    <carousel></carousel>-->
+<!--                </div>-->
+<!--                <div class="w-25 d-inline-block" style="background-color: #eee;">-->
+<!--                    <right-bar></right-bar>-->
+<!--                </div>-->
+<!--            </div>-->
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
 
-#nav {
-  padding: 30px;
+    import topBar from "./components/topBar";
+    import carousel from "./components/carousel";
+    import rightBar from "./components/rightBar";
+    import imgPropPanel from "./components/imgPropPanel";
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+    import {mapState} from 'vuex'
 
-    &.router-link-exact-active {
-      color: #42b983;
+    export default {
+        components: {
+            topBar,
+            carousel,
+            rightBar,
+            imgPropPanel
+        },
+        computed: {
+            ...mapState([
+                'files',
+                'problemMap',
+                'filter'
+            ])
+        },
+        mounted() {
+            this.$store.commit('updateProblemMap');
+            // for(var key of this.problemMap.keys()){
+            //   console.log(key)
+            //   console.log(this.problemMap.get(key))
+            // }
+        }
     }
-  }
-}
+
+</script>
+
+<style lang="scss">
+$image-path: '~@/../mdb/mdbvue/img';
+@import '~@/../mdb/mdbvue/scss/mdb-free.scss';
+
+
 </style>
