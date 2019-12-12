@@ -4,6 +4,10 @@ import 'mdbvue/lib/mdbvue.css'
 import Vue from 'vue'
 import router from './router'
 import store from './store'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+Vue.use(VueAxios, axios)
 
 require('./assets/scss/main.scss')
 const VueUploadComponent = require('vue-upload-component')

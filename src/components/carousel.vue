@@ -56,21 +56,22 @@
             doDraw(){
                 //  获取canvas
                 let that = this;
-                var canvas = document.getElementById("mycanvas");
+                let canvas = document.getElementById("mycanvas");
                 //  由于弹窗，确保已获取到
-                var a = setInterval(() =>{
+                let a = setInterval(() =>{
                     if(!canvas){
                         return false
                     } else {
                         console.log("get canvas successfully");
                         clearInterval(a);
                         //  可以理解为一个画笔，可画路径、矩形、文字、图像
-                        var context = canvas.getContext('2d');
-                        var img = new Image();
+                        let context = canvas.getContext('2d');
+                        let img = new Image();
                         console.log(that.currentDisplayed);
                         if(that.currentDisplayed.filename === "")return;
-                        let file_path = 'shigongdiansucai/' + that.currentDisplayed.filename;
-                        img.src = require('../assets/' + file_path);
+                        let url = 'http://' + that.problemMap.get(that.currentDisplayed.filename).url;
+                        console.log('url',url);
+                        img.src = url;
                         //  加载图片
                         img.onload = function(){
                             if(img.complete){
@@ -84,31 +85,31 @@
                                 // canvas.setAttribute("height",img.height)
                                 //  绘制图片
                                 context.drawImage(img,0,0,img.width,img.height);
-                                let ratio_w = o_width / img.width;
-                                let ratio_h = o_height / img.height;
-                                console.log(ratio_w, ratio_h);
-                                if(that.problemMap.get(file_path)!==undefined){
-                                    // console.log(that.problemMap);
-                                    // console.log(that.problemMap.get(file_path));
-                                    let boxes = that.problemMap.get(file_path);
-                                    for(var i=0;i<boxes.length;i++){
-                                        console.log(boxes[i])
-                                        switch (boxes[i].category) {
-                                            case 2:
-                                                context.strokeStyle = "green";
-                                                break;
-                                            case 1:
-                                                context.strokeStyle = "yellow";
-                                                break;
-                                            case 0:
-                                                context.strokeStyle = "red";
-                                                break;
-                                        }
-                                        context.lineWidth = 3;
-                                        let b = boxes[i].box;
-                                        context.strokeRect(b[0]/ratio_w, b[1]/ratio_h, b[2]/ratio_w, b[3]/ratio_h);
-                                    }
-                                }
+                                // let ratio_w = o_width / img.width;
+                                // let ratio_h = o_height / img.height;
+                                // console.log(ratio_w, ratio_h);
+                                // if(that.problemMap.get(file_path)!==undefined){
+                                //     // console.log(that.problemMap);
+                                //     // console.log(that.problemMap.get(file_path));
+                                //     let boxes = that.problemMap.get(file_path);
+                                //     for(var i=0;i<boxes.length;i++){
+                                //         console.log(boxes[i])
+                                //         switch (boxes[i].category) {
+                                //             case 2:
+                                //                 context.strokeStyle = "green";
+                                //                 break;
+                                //             case 1:
+                                //                 context.strokeStyle = "yellow";
+                                //                 break;
+                                //             case 0:
+                                //                 context.strokeStyle = "red";
+                                //                 break;
+                                //         }
+                                //         context.lineWidth = 3;
+                                //         let b = boxes[i].box;
+                                //         context.strokeRect(b[0]/ratio_w, b[1]/ratio_h, b[2]/ratio_w, b[3]/ratio_h);
+                                //     }
+                                // }
 
                             }
                         }

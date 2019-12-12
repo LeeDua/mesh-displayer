@@ -1,7 +1,8 @@
 <template>
     <div>
         <top-bar id="topBar"></top-bar>
-        <div id="mid-content" class="row d-flex justify-content-center">
+        <div id="mid-content" class="row d-flex justify-content-center"
+            v-if="problemList.length!==0">
             <right-bar id="rbar"></right-bar>
             <carousel></carousel>
         </div>
@@ -37,17 +38,9 @@
         computed: {
             ...mapState([
                 'files',
-                'problemMap',
-                'filter'
+                'problemList'
             ])
         },
-        mounted() {
-            this.$store.commit('updateProblemMap');
-            // for(var key of this.problemMap.keys()){
-            //   console.log(key)
-            //   console.log(this.problemMap.get(key))
-            // }
-        }
     }
 
 </script>

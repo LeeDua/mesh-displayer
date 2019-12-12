@@ -5,32 +5,30 @@ export default {
     updateFileList(state, fileList){
         state.fileList = fileList
     },
-    updateProblemMap(state) {
-        var img_filter;
-        for (var i=0;i<state.filter.length;i++){
-            img_filter = state.filter[i];
-            let file_path = img_filter.folder + '/' + img_filter.file_name;
-            let boxes =[]
-            for(var j=0;j<img_filter.annotations.length; j++){
-                boxes.push({
-                    box:img_filter.annotations[j].bbox,
-                    category:img_filter.annotations[j].category_id
-                })
-            }
-            state.problemMap.set(file_path, boxes)
-            if(img_filter.folder==='shigongdiansucai'){
-                state.problemList.push(file_path)
-            }
+    updateOriginalReturnList(state, l){
+        state.originalReturnList = l;
+        console.log('originalList', l);
+        let problemList = [];
+        let problemMap = new Map();
+        for(let i=0;i<l.length;i++){
+            let temp = l[i].split('/');
+            let img_name = temp[temp.length -1];
+            problemList.push(img_name);
+            problemMap.set(img_name,{
+                url:l[i],
+                isProblematic: true
+            })
         }
+        state.problemList = problemList;
+        state.problemMap = problemMap;
+        console.log('problemList:', problemList);
+        console.log('problemMap', problemMap);
     },
-    setIsProblemImage(state, tf_value){
-        state.isProblemImage = tf_value
-    },
-    setCurrentDisplayed(state, filename, index){
+    setCurrentDisplayed(state, filename, index, detected){
         state.currentDisplayed = {
             filename,
-            index
+            index,
+            detected
         };
-        console.log("in set currentDis",state.currentDisplayed)
     }
 }

@@ -4,12 +4,10 @@ export default {
     fileList: [],
     problemMap : new Map(),
     problemList: [],
-    testInputList : [],
-    filter : json_filter['images'],
+    originalReturnList: [],
     currentDisplayed: {
         filename: "",
-        index: 0
+        index: 0,
+        isProblematic: false
     },
-    folder : 'shigongdiansucai',
-    isProblemImage: false
 }

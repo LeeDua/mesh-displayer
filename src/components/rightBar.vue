@@ -5,7 +5,7 @@
         </div>
         <div class="overflow-auto scrollbar scrollbar-black bordered-black square thin">
             <div
-                 v-for="(img,index) in fileList"
+                 v-for="(img,index) in problemList"
                  @click="onSelectProblemImg(img,index)"
                  class="item-style"
             >
@@ -14,9 +14,9 @@
                      :style="{ 'color': currentDisplayed.filename === img ? 'red' : 'black'}">
                     {{img}}
                     <i class="fas fa-exclamation-circle problem-icon img-status" aria-hidden="true"
-                       v-if="isProblematic(img)"></i>
+                       v-if="currentDisplayed.isProblematic"></i>
                     <i class="fas fa-check-circle normal-icon img-status" aria-hidden="true"
-                       v-if="!isProblematic(img)"></i>
+                       v-if="!currentDisplayed.isProblematic"></i>
                 </div>
             </div>
         </div>
@@ -44,35 +44,17 @@
                 'problemMap',
                 'fileList',
                 'currentDisplayed',
-                'folder'
             ]),
         },
         name: "right-bar",
         mounted() {
-            this.importAll(require.context('../assets/shigongdiansucai/', true, /\.jpg$/));
         },
         methods: {
             onSelectProblemImg(filename, index) {
                 console.log(filename, index);
-                this.$store.commit('setIsProblemImage', true);
-                this.$store.commit('setCurrentDisplayed', filename, index);
+                this.$store.commit('setCurrentDisplayed', filename, index, this.problemMap.get(filename).isProblematic);
                 console.log("on click,current dis change",this.currentDisplayed)
             },
-            importAll(r) {
-                let l = r.keys();
-                let originList = [];
-                for (var i = 0; i < l.length; i++) {
-                    let filename = l[i].substring(2);
-                    originList.push(filename)
-                }
-                console.log(l)
-                this.$store.commit('updateFileList', originList);
-                console.log(originList)
-            },
-            isProblematic(img) {
-                return this.problemMap.get('shigongdiansucai/' + img) !== undefined;
-
-            }
         },
     }
 </script>
