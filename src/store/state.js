@@ -1,13 +1,28 @@
 let json_filter = require('../assets/data.json')
 export default {
-    files: [],
+    files: FileList,
     fileList: [],
     problemMap : new Map(),
     problemList: [],
     originalReturnList: [],
     currentDisplayed: {
-        filename: "",
-        index: 0,
-        isProblematic: false
+        name: "",
+        id: 1,
+        url: ""
+    },
+    editing: false,
+    newTask: {
+        isCreating: false,
+        parentId: -1,
+    },
+    currentSelectedTask: {
+        name: "",
+        id : 1
+    },
+    currentDisplayedTask: {
+        name:"",
+        id: 1,
+        imgs: []
+
     },
 }

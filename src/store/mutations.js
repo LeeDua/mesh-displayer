@@ -24,11 +24,27 @@ export default {
         console.log('problemList:', problemList);
         console.log('problemMap', problemMap);
     },
-    setCurrentDisplayed(state, filename, index, detected){
-        state.currentDisplayed = {
-            filename,
-            index,
-            detected
-        };
+    setCurrentDisplayed(state, payload) {
+        state.currentDisplayed = payload
+        console.log(payload.url)
+    },
+    setCurrentSelectedTask(state, payload){
+        state.currentSelectedTask = payload
+    },
+    setEditState(state, edit){
+        state.editing = edit
+    },
+    startCreatingTask(state, parentId){
+        state.newTask.isCreating = true;
+        state.newTask.parentId = parentId;
+    },
+    resetCreatingTask(state){
+        state.newTask.isCreating = false;
+        state.newTask.parentId = -1;
+    },
+    setCurrentDisplayedTask(state, payload){
+        state.currentDisplayedTask = payload;
     }
+
+
 }

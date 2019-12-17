@@ -1,22 +1,23 @@
 <template>
     <div class="card card-style d-flex align-items-center">
         <div class="mcard">
-            识别结果
+            {{currentDisplayedTask.name}}
         </div>
         <div class="overflow-auto scrollbar scrollbar-black bordered-black square thin">
             <div
-                 v-for="(img,index) in problemList"
-                 @click="onSelectProblemImg(img,index)"
+                 v-for="img in currentDisplayedTask.imgs"
+                 @click="onSelectProblemImg(img)"
                  class="item-style"
             >
                 <hr style="margin: 0px 0px 0.5rem 0px;height: 1px;width: 100%">
-                <div style="margin-left:0.6rem;margin-right: 0.6rem;"
-                     :style="{ 'color': currentDisplayed.filename === img ? 'red' : 'black'}">
-                    {{img}}
+                <div
+                        style="margin-left:0.6rem;margin-right: 0.6rem;"
+                        :style="{ 'color': currentDisplayed.name === img.name ? 'DodgerBlue' : 'black'}">
+                    {{img.name}}
                     <i class="fas fa-exclamation-circle problem-icon img-status" aria-hidden="true"
-                       v-if="currentDisplayed.isProblematic"></i>
+                       v-if="img.is_alert"></i>
                     <i class="fas fa-check-circle normal-icon img-status" aria-hidden="true"
-                       v-if="!currentDisplayed.isProblematic"></i>
+                       v-if="!img.is_alert"></i>
                 </div>
             </div>
         </div>
@@ -44,16 +45,20 @@
                 'problemMap',
                 'fileList',
                 'currentDisplayed',
+                'currentDisplayedTask'
             ]),
         },
         name: "right-bar",
         mounted() {
         },
         methods: {
-            onSelectProblemImg(filename, index) {
-                console.log(filename, index);
-                this.$store.commit('setCurrentDisplayed', filename, index, this.problemMap.get(filename).isProblematic);
-                console.log("on click,current dis change",this.currentDisplayed)
+            onSelectProblemImg(img) {
+                let payload = {
+                    name: img.name,
+                    id: img.id,
+                    url: img.url
+                };
+                this.$store.commit('setCurrentDisplayed',payload);
             },
         },
     }

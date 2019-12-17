@@ -1,22 +1,17 @@
 <template>
     <div>
-        <top-bar id="topBar"></top-bar>
-        <div id="mid-content" class="row d-flex justify-content-center"
-            v-if="problemList.length!==0">
-            <right-bar id="rbar"></right-bar>
-            <carousel></carousel>
+
+
+        <div id="top-level" style="margin-top:2rem">
+            <!--        <top-bar id="topBar"></top-bar>-->
+            <div id="mid-content" class="row d-flex justify-content-center">
+                <!--            v-if="problemList.length!==0">-->
+                <task-panel  ></task-panel>
+                <carousel></carousel>
+                <right-bar id="rbar" v-if="currentDisplayedTask.imgs.length !== 0"></right-bar>
+            </div>
         </div>
     </div>
-
-
-<!--            <div alt="Max-width 100%">-->
-<!--                <div class="w-auto d-inline-block" style="background-color: #eee;">-->
-<!--                    <carousel></carousel>-->
-<!--                </div>-->
-<!--                <div class="w-25 d-inline-block" style="background-color: #eee;">-->
-<!--                    <right-bar></right-bar>-->
-<!--                </div>-->
-<!--            </div>-->
 </template>
 
 <script>
@@ -24,7 +19,7 @@
     import topBar from "./components/topBar";
     import carousel from "./components/carousel";
     import rightBar from "./components/rightBar";
-    import imgPropPanel from "./components/imgPropPanel";
+    import taskPanel from "./components/taskPanel";
 
     import {mapState} from 'vuex'
 
@@ -33,12 +28,13 @@
             topBar,
             carousel,
             rightBar,
-            imgPropPanel
+            taskPanel
         },
         computed: {
             ...mapState([
                 'files',
-                'problemList'
+                'problemList',
+                'currentDisplayedTask'
             ])
         },
     }

@@ -3,20 +3,24 @@
     <mdb-navbar position="top" dark color="black" scrolling>
         <mdb-navbar-toggler>
             <mdb-navbar-nav>
-                <file-upload
-                        post-action="/upload/post"
-                        extensions="gif,jpg,jpeg,png,webp"
-                        accept="image/png,image/gif,image/jpeg,image/webp"
-                        :multiple="true"
-                        :size="1024 * 1024 * 10"
-                        v-model="files"
-                        @input="inputUpdate"
-                        ref="upload">
+<!--                <file-upload-->
+<!--                        post-action="/upload/post"-->
+<!--                        extensions="gif,jpg,jpeg,png,webp"-->
+<!--                        accept="image/png,image/gif,image/jpeg,image/webp"-->
+<!--                        :multiple="true"-->
+<!--                        :size="1024 * 1024 * 10"-->
+<!--                        v-model="files"-->
+<!--                        @input="inputUpdate"-->
+<!--                        ref="upload">-->
+<!--                    <mdb-btn color="elegant" style="font-size: 1rem">-->
+<!--                        <mdb-icon icon="plus" class="mr-2"></mdb-icon>-->
+<!--                        选择图片-->
+<!--                    </mdb-btn>-->
+<!--                </file-upload>-->
                     <mdb-btn color="elegant" style="font-size: 1rem">
                         <mdb-icon icon="plus" class="mr-2"></mdb-icon>
                         选择图片
                     </mdb-btn>
-                </file-upload>
                 <mdb-btn color="elegant"
                          class="start-upload"
                          :disabled="uploadDisabled"
@@ -53,6 +57,7 @@
         computed: {
             ...mapState([
                 'files',
+                'currentSelectedTask'
             ]),
             uploadDisabled(){
                 return !this.files.length
@@ -67,19 +72,20 @@
                 const fd = new FormData();
                 let file_list = [];
                 for(let i=0;i<this.files.length;i++){
-                    file_list.push(this.files[i].file.name)
+                    file_list.push(this.files[i].file.name);
                     fd.append(this.files[i].file.name, this.files[i].file)
                 }
-                console.log(file_list)
-                fd.append('name','test');
-                fd.append('file_list',file_list);
+                console.log(file_list);
+                fd.append('img_list',file_list);
+                fd.append('task-id', this.currentSelectedTask.id.toString());
                 const instance = this.axios.create({
                     withCredentials: false
                 });
+                let that = this;
                 instance.post('http://47.99.180.225:8080/upload/',fd)
                     .then(response => {
-                        console.log("heyheyhey",response);
-                        this.$store.commit('updateOriginalReturnList',response.data.urls);
+                            console.log("uploadImageResponse",response.data);
+                            // that.$store.commit('setCurrentDisplayedTask',response.data);
                         }
                     );
             }
