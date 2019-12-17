@@ -19,44 +19,56 @@
             </div>
         </div>
 
-        <div class="card-footer foot-panel mt-auto d-flex justify-content-around">
-            <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
-                <span slot="tip">新建子任务</span>
-                <i class="fas fa-plus icons"
-                   @click="pressNewTask"
-                   slot="reference"
-                ></i>
-            </mdb-tooltip>
-            <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
-                <span slot="tip">编辑任务名称</span>
-                <i class="fas fa-edit icons"
-                   @click="editTaskName"
-                   :class="{colored: editing}"
-                   slot="reference"
-                ></i>
-            </mdb-tooltip>
-            <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
-                <span slot="tip">删除任务</span>
-                <i class="fas fa-trash-alt icons" slot="reference"
-                   @click="setupAlert"></i>
-            </mdb-tooltip>
-            <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
-                <span slot="tip">选择图片</span>
+        <div class="mt-auto">
+            <div v-if="uploading" class="fileState d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div v-else class="d-flex justify-content-center">
+                <button type="button" class="mbtn" v-if="files.length!==0">已选择 {{files.length}} 张图片</button>
+            </div>
+            <div class="card-footer foot-panel d-flex justify-content-around">
+                <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
+                    <span slot="tip">新建子任务</span>
+                    <i class="fas fa-plus icons"
+                       @click="pressNewTask"
+                       slot="reference"
+                    ></i>
+                </mdb-tooltip>
+                <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
+                    <span slot="tip">进入编辑模式</span>
+                    <i class="fas fa-edit icons"
+                       @click="editTaskName"
+                       :class="{colored: editing}"
+                       slot="reference"
+                    ></i>
+                </mdb-tooltip>
+                <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
+                    <span slot="tip">删除任务</span>
+                    <i class="fas fa-trash-alt icons" slot="reference"
+                       @click="setupAlert"></i>
+                </mdb-tooltip>
+                <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
+                    <span slot="tip">选择图片</span>
                     <i class="fas fa-image icons" slot="reference"
-                        @click="selectImg"></i>
+                       @click="selectImg"></i>
                     <input type="file" multiple style="display: none" id="selectImg"
                            ref="fileInput"
                            @change="inputUpdate"
-                        >
-            </mdb-tooltip>
-            <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
-                <span slot="tip">上传图片</span>
-                <i class="fas fa-upload icons" slot="reference"
-                   :disabled="uploadDisabled"
-                   @click="onUpload"
-                ></i>
-            </mdb-tooltip>
+                    >
+                </mdb-tooltip>
+                <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
+                    <span slot="tip">上传图片</span>
+                    <i class="fas fa-upload icons" slot="reference"
+                       :disabled="uploadDisabled"
+                       @click="onUpload"
+                    ></i>
+                </mdb-tooltip>
+            </div>
         </div>
+
+
 
 
         <div>
@@ -126,7 +138,9 @@
                 warning: false,
                 alertFlag: false,
                 alertMessage: "",
-                rootListEmpty: false
+                rootListEmpty: false,
+                uploading: false,
+                tempFileCount: 0
             }
         },
         computed:{
@@ -134,7 +148,8 @@
                 'editing',
                 'newTask',
                 'currentSelectedTask',
-                'files'
+                'files',
+                'clearFile'
             ]),
             uploadDisabled(){
                 return !this.files.length
@@ -149,8 +164,19 @@
                 console.log(this.files)
             },
             onUpload(){
+                if(this.currentSelectedTask.id === 1){
+                    this.showAlert("请选择任务再上传图片");
+                    return;
+                }
+                if(this.uploading){
+                    return;
+                }
                 const fd = new FormData();
                 let file_list = [];
+                if(this.files.length === 0){
+                    this.showAlert("请先选择图片再上传");
+                    return;
+                }
                 for(let i=0;i<this.files.length;i++){
                     file_list.push(this.files[i].name);
                     fd.append(this.files[i].name, this.files[i])
@@ -163,9 +189,11 @@
                     withCredentials: false
                 });
                 let that = this;
-                this.$store.commit('updateFiles', []);
+                this.$store.commit('clearFile');
+                this.uploading = true;
                 instance.post('http://47.99.180.225:8080/detection/upload/',fd)
                     .then(response => {
+                            that.uploading = false;
                             console.log("uploadImageResponse",response.data);
                             that.$store.commit('setCurrentDisplayedTask',response.data);
                         }
@@ -189,7 +217,7 @@
                 console.log("onClick node" , node.name)
             },
             editTaskName(){
-                if(this.currentSelectedTask.id === -1){
+                if(this.currentSelectedTask.id === 1){
                     this.showAlert('请先单击选择任务再进入编辑模式');
                     return;
                 }
@@ -230,15 +258,15 @@
             deleteTask(){
                 console.log("inDeleteTask");
                 this.warning = false;
-                return;
                 const fd = new FormData();
                 fd.append('id', this.currentSelectedTask.id.toString());
                 const instance = this.axios.create({
                     withCredentials: false
                 });
-                instance.post('http://47.99.180.225:8080/task/delete',fd)
+                instance.post('http://47.99.180.225:8080/detection/remove_mission/',fd)
                     .then(response => {
                             console.log("DeleteTask",response);
+                            this.rootList = response.data.tasks;
                         }
                     );
             },
@@ -286,6 +314,21 @@
     .alertModal{
         color: white;
         font-weight: 500;
+    }
+    .fileState{
+        margin-bottom: 1rem;
+    }
+    .mbtn{
+        background-color: lightgrey;
+        border-radius: 1rem;
+        margin-bottom: 0.5rem;
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
+        border: none;
+        font-size: 0.8rem;
+        pointer-events:none
     }
 
 </style>

@@ -1,6 +1,6 @@
 let json_filter = require('../assets/data.json')
 export default {
-    files: FileList,
+    files: [],
     fileList: [],
     problemMap : new Map(),
     problemList: [],

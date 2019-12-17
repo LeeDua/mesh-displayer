@@ -1,6 +1,11 @@
 export default {
+    clearFile(state){
+        state.files = []
+    },
     updateFiles(state, files) {
-        state.files = files
+        for(let i=0;i<files.length;i++){
+            state.files.push(files.item(i))
+        }
     },
     updateFileList(state, fileList){
         state.fileList = fileList

@@ -1,5 +1,5 @@
 <template>
-    <div class="card card-style d-flex align-items-center">
+    <div class="card card-style d-flex align-items-center;">
         <div class="mcard">
             {{currentDisplayedTask.name}}
         </div>
