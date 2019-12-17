@@ -228,7 +228,10 @@
                     this.$store.commit('setEditState',false);
                     const fd = new FormData();
                     fd.append('name','未命名任务');
-                    let parent = this.currentSelectedTask.id.toString()
+                    let parent = this.currentSelectedTask.id.toString();
+                    if(this.rootList.length === 0){
+                        parent = 1;
+                    }
                     console.log('parent',parent);
                     fd.append('parent-id',parent);
                     const instance = this.axios.create({
