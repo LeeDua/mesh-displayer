@@ -49,6 +49,9 @@ export default {
     },
     setCurrentDisplayedTask(state, payload){
         state.currentDisplayedTask = payload;
+    },
+    setRootSelected(state, c){
+        state.rootSelected = c;
     }
 
 

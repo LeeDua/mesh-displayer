@@ -23,6 +23,6 @@ export default {
         name:"",
         id: 1,
         imgs: []
-
     },
+    rootSelected: false
 }

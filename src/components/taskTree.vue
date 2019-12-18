@@ -4,7 +4,7 @@
                 @click="nodeClicked"
                 :style="{'margin-left': `${depth * 20}px`}"
                 class="node"
-                :class="{colored: (node.id === currentSelectedTask.id)}"
+                :class="{colored: (node.id === currentSelectedTask.id), tbMargin: !(editing && node.id=== currentSelectedTask.id)}"
         >
 <!--      <span-->
 <!--              v-if="hasChildren"-->
@@ -80,6 +80,7 @@
                             name: that.node.name,
                             id: that.node.id
                         };
+                        that.$store.commit('setRootSelected',false);
                         that.$store.commit('setCurrentSelectedTask',payload);
                         that.getTask(that.node.id)
                         if(that.editing){
@@ -171,6 +172,10 @@
         user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
     }
+    .tbMargin{
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
     .input-text{
         font-size: 18px;
         color: Dodgerblue;
@@ -179,5 +184,7 @@
         border-style: dashed;
         width: 8rem;
         padding-left: 0.2rem;
+        padding-top: 0px;
+        padding-bottom: 0px;
     }
 </style>

@@ -1,7 +1,8 @@
 <template>
     <div class="card" style="max-width: 18rem;min-width:12rem;margin-top: 0.8rem">
         <div class="card-style">
-            <div class="header d-flex justify-content-center">
+            <div class="header d-flex justify-content-center noselect" @click="rootClicked"
+                :class="{colored: rootSelected}">
                 任务列表
             </div>
             <hr style="margin: 0px 0px 0.5rem 0px;height: 1px;width: 100%">
@@ -37,7 +38,8 @@
                     ></i>
                 </mdb-tooltip>
                 <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
-                    <span slot="tip">进入编辑模式</span>
+                    <span slot="tip" v-if="!editing">进入编辑模式</span>
+                    <span slot="tip" v-else>保存修改</span>
                     <i class="fas fa-edit icons"
                        @click="editTaskName"
                        :class="{colored: editing}"
@@ -73,9 +75,9 @@
 
         <div>
             <!-- trigger modal button -->
-            <mdb-modal :show="warning" @close="warning = false" warning>
+            <mdb-modal :show="warning" @close="warning = false">
                 <!--Header-->
-                <mdb-modal-header>
+                <mdb-modal-header class="deleteAlert">
                 </mdb-modal-header>
                 <!--Body-->
                 <mdb-modal-body>
@@ -85,8 +87,8 @@
                 </mdb-modal-body>
                 <!--Footer-->
                 <mdb-modal-footer center>
-                    <mdb-btn color="warning" @click.native="deleteTask">确认删除<mdb-icon icon="diamond" class="ml-1" color="white"/></mdb-btn>
-                    <mdb-btn outline="warning" @click.native="warning = false">取消</mdb-btn>
+                    <mdb-btn color="cyan" @click.native="deleteTask">确认删除</mdb-btn>
+                    <mdb-btn outline="cyan" @click.native="warning = false">取消</mdb-btn>
                 </mdb-modal-footer>
             </mdb-modal>
         </div>
@@ -140,7 +142,7 @@
                 alertMessage: "",
                 rootListEmpty: false,
                 uploading: false,
-                tempFileCount: 0
+                tempFileCount: 0,
             }
         },
         computed:{
@@ -149,7 +151,8 @@
                 'newTask',
                 'currentSelectedTask',
                 'files',
-                'clearFile'
+                'clearFile',
+                'rootSelected'
             ]),
             uploadDisabled(){
                 return !this.files.length
@@ -199,7 +202,15 @@
                         }
                     );
             },
-
+            rootClicked(){
+                this.$store.commit('setEditState', false);
+                let root = {
+                        name: "",
+                        id : 1
+                    };
+                this.$store.commit('setCurrentSelectedTask',root);
+                this.$store.commit('setRootSelected',true);
+            },
             getAllTasks(){
                 const fd = new FormData();
                 const instance = this.axios.create();
@@ -235,7 +246,7 @@
                     console.log('parent',parent);
                     fd.append('parent-id',parent);
                     const instance = this.axios.create({
-                        withCredentials: false
+                            withCredentials: false
                     });
                     instance.post('http://47.99.180.225:8080/detection/create_mission/',fd)
                         .then(response => {
@@ -265,6 +276,11 @@
                 fd.append('id', this.currentSelectedTask.id.toString());
                 const instance = this.axios.create({
                     withCredentials: false
+                });
+                this.$store.commit('setEditState',false);
+                this.$store.commit('setCurrentSelectedTask',{
+                    name: "",
+                    id : 1
                 });
                 instance.post('http://47.99.180.225:8080/detection/remove_mission/',fd)
                     .then(response => {
@@ -332,6 +348,18 @@
         border: none;
         font-size: 0.8rem;
         pointer-events:none
+    }
+    .deleteAlert{
+        background-color: #17a2b8 !important;
+    }
+    .noselect {
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
     }
 
 </style>
