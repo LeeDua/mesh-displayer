@@ -71,8 +71,10 @@
                         let context = canvas.getContext('2d');
                         let img = new Image();
                         console.log(that.currentDisplayed);
+                        let def = false;
                         if(that.currentDisplayed.name === ""){
                             img.src = 'http://47.99.180.225:8080/static/default.jpeg'
+                            def = true;
                         }else{
                             let url = 'http://' + that.currentDisplayed.url;
                             console.log('url',url);
@@ -90,6 +92,10 @@
                                 }
                                 let yOffset = (that.canvas_height - img.height) / 2;
                                 console.log(yOffset);
+                                if(!def){
+                                    yOffset = 0;
+                                    img.height = that.canvas_height;
+                                }
                                 //  根据图像重新设定了canvas的长宽
                                 // canvas.setAttribute("width",img.width)
                                 // canvas.setAttribute("height",img.height)
