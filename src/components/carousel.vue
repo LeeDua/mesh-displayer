@@ -72,7 +72,7 @@
                         let img = new Image();
                         console.log(that.currentDisplayed);
                         if(that.currentDisplayed.name === ""){
-                            img.src = 'https://mdbootstrap.com/img/Photos/Others/placeholder.jpg'
+                            img.src = 'http://47.99.180.225:8080/static/default.jpeg'
                         }else{
                             let url = 'http://' + that.currentDisplayed.url;
                             console.log('url',url);
@@ -82,14 +82,20 @@
                             if(img.complete){
                                 let o_width = img.width;
                                 let o_height = img.height;
-                                console.log(o_width,o_height);
+                                console.log(o_width,o_height,that.canvas_height, that.canvas_width);
                                 img.width = that.canvas_width;
-                                img.height = that.canvas_height;
+                                img.height = o_height / (o_width / that.canvas_width);
+                                if(img.height > that.canvas_height){
+                                    img.height = that.canvas_height;
+                                }
+                                let yOffset = (that.canvas_height - img.height) / 2;
+                                console.log(yOffset);
                                 //  根据图像重新设定了canvas的长宽
                                 // canvas.setAttribute("width",img.width)
                                 // canvas.setAttribute("height",img.height)
                                 //  绘制图片
-                                context.drawImage(img,0,0,img.width,img.height);
+                                context.clearRect(0,0,canvas.width, canvas.height);
+                                context.drawImage(img,0,yOffset,img.width,img.height);
                                 // let ratio_w = o_width / img.width;
                                 // let ratio_h = o_height / img.height;
                                 // console.log(ratio_w, ratio_h);
