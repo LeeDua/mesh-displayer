@@ -85,13 +85,13 @@
                             <div class="detail-unit">
                                 <div class="detail-span strong">计划名称</div>
                             </div>
-                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp.计划名称"
                                    @change="temp"
                             ></input>
                             <div class="detail-unit">
                                 <div class="detail-span strong">任务性质</div>
                             </div>
-                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp.任务性质"
                                    @change="temp"
                             ></input>
                         </div>
@@ -99,13 +99,13 @@
                             <div class="detail-unit">
                                 <div class="detail-span strong">开始日期</div>
                             </div>
-                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp.开始日期"
                                    @change="temp"
                             ></input>
                             <div class="detail-unit">
                                 <div class="detail-span strong">结束日期</div>
                             </div>
-                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp.结束日期"
                                    @change="temp"
                             ></input>
                         </div>
@@ -156,7 +156,7 @@
                             <div class="detail-unit">
                                 <div class="detail-span strong">型号</div>
                             </div>
-                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp.型号"
                                    @change="temp"
                             ></input>
                             <div class="detail-unit">
@@ -194,7 +194,7 @@
                             <div class="detail-unit">
                                 <div class="detail-span strong">联系电话</div>
                             </div>
-                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp.联系电话"
                                    @change="temp"
                             ></input>
                         </div>
@@ -217,7 +217,8 @@
                             <div class="detail-unit">
                                 <div class="detail-span strong">备注</div>
                             </div>
-                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="empty"
+                                   placeholder="请输入备注"
                                    @change="temp"
                             ></input>
                         </div>
@@ -272,7 +273,7 @@
                             <div class="detail-unit">
                                 <div class="detail-span strong">联系电话</div>
                             </div>
-                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp.联系电话"
                                    @change="temp"
                             ></input>
                         </div>
@@ -407,7 +408,15 @@
         data(){
             return{
                 rootList: [],
-                temp: "123",
+                empty: "",
+                temp: {
+                    '计划名称': '无人机管道巡检-1114',
+                    '任务性质': '管道巡检',
+                    '开始日期': '2019-11-14',
+                    '结束日期': '2019-11-14',
+                    '型号': 'Phantom 4 pro v2.0',
+                    '联系电话': '17323830487',
+                },
                 deleteAlertText: "",
                 warning: false,
                 creating: false,
