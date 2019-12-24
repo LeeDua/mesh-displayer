@@ -33,19 +33,19 @@
                 <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
                     <span slot="tip">新建子任务</span>
                     <i class="fas fa-plus icons"
-                       @click="pressNewTask"
+                       @click="createTask"
                        slot="reference"
                     ></i>
                 </mdb-tooltip>
-                <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
-                    <span slot="tip" v-if="!editing">进入编辑模式</span>
-                    <span slot="tip" v-else>保存修改</span>
-                    <i class="fas fa-edit icons"
-                       @click="editTaskName"
-                       :class="{colored: editing}"
-                       slot="reference"
-                    ></i>
-                </mdb-tooltip>
+<!--                <mdb-tooltip trigger="hover" :options="{placement: 'top'}">-->
+<!--                    <span slot="tip" v-if="!editing">进入编辑模式</span>-->
+<!--                    <span slot="tip" v-else>保存修改</span>-->
+<!--                    <i class="fas fa-edit icons"-->
+<!--                       @click="editTaskName"-->
+<!--                       :class="{colored: editing}"-->
+<!--                       slot="reference"-->
+<!--                    ></i>-->
+<!--                </mdb-tooltip>-->
                 <mdb-tooltip trigger="hover" :options="{placement: 'top'}">
                     <span slot="tip">删除任务</span>
                     <i class="fas fa-trash-alt icons" slot="reference"
@@ -70,7 +70,278 @@
             </div>
         </div>
 
+        <div>
+            <!-- trigger modal button -->
+            <mdb-modal :show="detail" @close="detail = false" size="lg" class="modal-size">
+<!--                <mdb-modal-header class="missionModal">-->
+<!--                </mdb-modal-header>-->
+                <div class="detail-info">
+                    <div class="d-flex align-items-center">
+                        <div class="slice"></div>
+                        <div class="detail-title">基本信息</div>
+                    </div>
+                    <div>
+                        <div class="detail-row">
+                            <div class="detail-unit">
+                                <div class="detail-span strong">计划名称</div>
+                            </div>
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                                   @change="temp"
+                            ></input>
+                            <div class="detail-unit">
+                                <div class="detail-span strong">任务性质</div>
+                            </div>
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                                   @change="temp"
+                            ></input>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-unit">
+                                <div class="detail-span strong">开始日期</div>
+                            </div>
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                                   @change="temp"
+                            ></input>
+                            <div class="detail-unit">
+                                <div class="detail-span strong">结束日期</div>
+                            </div>
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                                   @change="temp"
+                            ></input>
+                        </div>
 
+                        <div class="detail-row">
+                            <div class="detail-unit">
+                                <div class="detail-span strong">周执行计划</div>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-control-inline" v-for="wd in weekdays">
+                                <input type="checkbox" class="custom-control-input" :id="wd">
+                                <label class="custom-control-label check-text" :for="wd">{{wd}}</label>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="detail-unit">
+                                <div class="detail-span strong">无人机编号</div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="round-btn round-text detail-unit noborder large-rmagin justify-content-between d-flex" id="无人机编号" data-toggle="dropdown">
+                                    <div>A009</div>
+                                    <i class="fas fa-angle-down drop-arrow arrow-color"></i>
+                                </button>
+                                <div class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item drop-item" href="#"
+                                       v-for="m in missionDropdownList"
+                                       :key="m"
+                                    >{{m}}</a>
+                                </div>
+                            </div>
+                            <div class="detail-unit">
+                                <div class="detail-span strong">无人机类型</div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="round-btn round-text detail-unit noborder large-rmagin justify-content-between d-flex" id="无人机类型" data-toggle="dropdown">
+                                    <div>多旋翼</div>
+                                    <i class="fas fa-angle-down drop-arrow arrow-color"></i>
+                                </button>
+                                <div class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item drop-item" href="#"
+                                       v-for="m in missionDropdownList"
+                                       :key="m"
+                                    >{{m}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-unit">
+                                <div class="detail-span strong">型号</div>
+                            </div>
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                                   @change="temp"
+                            ></input>
+                            <div class="detail-unit">
+                                <div class="detail-span strong">动力类型</div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="round-btn round-text detail-unit noborder large-rmagin justify-content-between d-flex" id="动力类型" data-toggle="dropdown">
+                                    <div>电动</div>
+                                    <i class="fas fa-angle-down drop-arrow arrow-color"></i>
+                                </button>
+                                <div class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item drop-item" href="#"
+                                       v-for="m in missionDropdownList"
+                                       :key="m"
+                                    >{{m}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-unit">
+                                <div class="detail-span strong">联系人</div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="round-btn round-text detail-unit noborder large-rmagin justify-content-between d-flex" id="联系人" data-toggle="dropdown">
+                                    <div>陈鑫</div>
+                                    <i class="fas fa-angle-down drop-arrow arrow-color"></i>
+                                </button>
+                                <div class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item drop-item" href="#"
+                                       v-for="m in missionDropdownList"
+                                       :key="m"
+                                    >{{m}}</a>
+                                </div>
+                            </div>
+                            <div class="detail-unit">
+                                <div class="detail-span strong">联系电话</div>
+                            </div>
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                                   @change="temp"
+                            ></input>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-unit">
+                                <div class="detail-span strong">飞行员</div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="round-btn round-text detail-unit noborder large-rmagin justify-content-between d-flex" id="飞行员" data-toggle="dropdown">
+                                    <div>黄青松</div>
+                                    <i class="fas fa-angle-down drop-arrow arrow-color"></i>
+                                </button>
+                                <div class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item drop-item" href="#"
+                                       v-for="m in missionDropdownList"
+                                       :key="m"
+                                    >{{m}}</a>
+                                </div>
+                            </div>
+                            <div class="detail-unit">
+                                <div class="detail-span strong">备注</div>
+                            </div>
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                                   @change="temp"
+                            ></input>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-unit">
+                                <div class="detail-span strong">飞行航线</div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="round-btn round-text detail-unit noborder large-rmagin justify-content-between d-flex" id="飞行航线" data-toggle="dropdown">
+                                    <div>恩施罗针田至熊家岩</div>
+                                    <i class="fas fa-angle-down drop-arrow arrow-color"></i>
+                                </button>
+                                <div class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item drop-item" href="#"
+                                       v-for="m in missionDropdownList"
+                                       :key="m"
+                                    >{{m}}</a>
+                                </div>
+                            </div>
+                            <div class="detail-unit">
+                                <div class="detail-span strong">飞行空域</div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="round-btn round-text detail-unit noborder large-rmagin justify-content-between d-flex" id="飞行空域" data-toggle="dropdown">
+                                    <div>恩施空域计划</div>
+                                    <i class="fas fa-angle-down drop-arrow arrow-color"></i>
+                                </button>
+                                <div class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item drop-item" href="#"
+                                       v-for="m in missionDropdownList"
+                                       :key="m"
+                                    >{{m}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-unit">
+                                <div class="detail-span strong">任务负责人</div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="round-btn round-text detail-unit noborder large-rmagin justify-content-between d-flex" id="任务负责人" data-toggle="dropdown">
+                                    <div>陈鑫</div>
+                                    <i class="fas fa-angle-down drop-arrow arrow-color"></i>
+                                </button>
+                                <div class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item drop-item" href="#"
+                                       v-for="m in missionDropdownList"
+                                       :key="m"
+                                    >{{m}}</a>
+                                </div>
+                            </div>
+                            <div class="detail-unit">
+                                <div class="detail-span strong">联系电话</div>
+                            </div>
+                            <input class="round-btn round-text detail-unit noborder large-rmagin" type="text" v-model="temp"
+                                   @change="temp"
+                            ></input>
+                        </div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="foot">
+                            <button class="square-btn blue-btn btn-grp"
+                                    @click="hideDetail">
+                                保 存
+                            </button>
+                            <button class="square-btn white-btn btn-grp"
+                                    @click="hideDetail">
+                                返 回
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <mdb-modal-body>
+                </mdb-modal-body>
+
+            </mdb-modal>
+        </div>
+
+        <div>
+            <!-- trigger modal button -->
+            <mdb-modal :show="creating" @close="creating = false">
+                <!--Header-->
+                <mdb-modal-header class="missionModal">
+                </mdb-modal-header>
+                <!--Body-->
+
+
+                <div class="dropdown mdrop">
+                    <p class="round-btn heavy-text"><span style="color:red">*</span> 作业名称</p>
+                    <button class="round-btn drop-width white-btn justify-content-between d-flex mission-border"
+                            id="missionName" data-toggle="dropdown">
+                        <div>请选择</div>
+                        <i class="fas fa-angle-down drop-arrow"></i>
+                    </button>
+                    <div class="dropdown-menu drop-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#"
+                           v-for="m in missionDropdownList"
+                           :key="m"
+                           @click="showDetail"
+                        >{{m}}</a>
+                    </div>
+                </div>
+
+                <mdb-modal-body>
+                </mdb-modal-body>
+
+                <!--Footer-->
+                <mdb-modal-footer center>
+                    <button class="square-btn blue-btn"
+                        @click="hideAll">
+                        确 定
+                    </button>
+                    <button class="square-btn white-btn"
+                            @click="hideAll">
+                        取 消
+                    </button>
+                </mdb-modal-footer>
+            </mdb-modal>
+        </div>
 
 
         <div>
@@ -136,13 +407,23 @@
         data(){
             return{
                 rootList: [],
+                temp: "123",
                 deleteAlertText: "",
                 warning: false,
+                creating: false,
+                detail: false,
                 alertFlag: false,
                 alertMessage: "",
                 rootListEmpty: false,
                 uploading: false,
                 tempFileCount: 0,
+                missionDropdownList: [
+                    '无人机管道巡检-1114恩施',
+                    '无人机管道巡检-1114黄水',
+                    '无人机管道巡检-1114忠县',
+                    '无人机管道巡检-1104忠县',
+                ],
+                weekdays:['周一','周二','周三','周四','周五','周六','周日']
             }
         },
         computed:{
@@ -292,12 +573,28 @@
             showAlert(mes){
                 this.alertMessage = mes;
                 this.alertFlag = true;
-                let that = this
+                let that = this;
                 setTimeout(function () {
                     that.alertFlag = false;
                 },1500)
+            },
+            showDetail(){
+                this.creating = false;
+                this.detail = true;
+            },
+            hideDetail(){
+                this.creating = true;
+                this.detail = false;
+            },
+            hideAll(){
+                this.creating = false;
+                this.detail = false;
+            },
+            createTask(){
+                this.creating = true;
             }
         },
+
     }
 </script>
 
@@ -352,6 +649,9 @@
     .deleteAlert{
         background-color: #17a2b8 !important;
     }
+    .missionModal{
+        background-color: #31a5d8 !important;
+    }
     .noselect {
         -webkit-touch-callout: none; /* iOS Safari */
         -webkit-user-select: none; /* Safari */
@@ -360,6 +660,109 @@
         -ms-user-select: none; /* Internet Explorer/Edge */
         user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
+    }
+    .white-btn{
+        background-color: white;
+        color: lightgray;
+    }
+    .heavy-text{
+        font-weight: 700;
+        margin-right: 0.4rem;
+    }
+    .round-btn{
+        font-size: 1rem;
+        border-radius: 1.2rem;
+        padding: 0.3rem 0.5rem 0.3rem 0.8rem;
+        outline: none;
+    }
+    .mission-border{
+        border-width: 1px;
+    }
+    .square-btn{
+        font-size: 0.8rem;
+        border-radius: 0.4rem;
+        padding: 0.5rem 1.2rem 0.5rem 1.2rem;
+        outline: none;
+    }
+    .drop-width{
+        width: 10rem;
+    }
+    .drop-arrow{
+        padding-top: 0.3rem;
+        padding-right: 0.3rem;
+    }
+    .arrow-color{
+        color: #5f5f5b;
+    }
+    .blue-btn{
+        background-color: #40adfc;
+        color: white
+    }
+    .mdrop{
+        padding: 1.5rem 1rem 5rem 3.5rem
+    }
+    .detail-info{
+        margin-top: 2rem;
+    }
+    .detail-span{
+        color: #5f5f5b;
+        font-weight: 700;
+        font-size: 1rem;
+        width: 5.5rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .detail-title{
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+        display: inline-block;
+        padding-top: 0.5rem;
+        margin-left: 0.2rem;
+    }
+    .slice{
+        width: 0.4rem;
+        height: 2rem;
+        background-color: #3191ba;
+        display: inline-block;
+    }
+    .detail-row{
+        margin: 1.2rem 0 1.2rem 1rem;
+        display: flex;
+        justify-content: center;
+    }
+    .detail-unit{
+        display: inline-block;
+        margin-left:0.5rem;
+        margin-right: 0.5rem;
+    }
+    .large-rmagin{
+        margin-right: 2rem;
+    }
+    .round-text{
+        background-color: #f6f8fb;
+        color: black;
+        font-size: 0.8rem;
+        width: 11rem;
+        padding-left: 1.2rem;
+    }
+    .noborder{
+        border: none
+    }
+    .check-text{
+        color: #5f5f5b;
+    }
+    .drop-item{
+        padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    }
+    .drop-menu{
+        min-width: 10rem !important;
+    }
+    .btn-grp{
+        margin: 0 1rem 0 1rem
+    }
+    .foot{
+        margin: 1rem 0 0 0
     }
 
 </style>
